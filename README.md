@@ -4,7 +4,7 @@
 
 <div align="center" style="display:flex;">
   <img 
-    width="720" 
+    width="620" 
     alt="Tela grande do Pokemmon E-commerce" 
     src="https://firebasestorage.googleapis.com/v0/b/pokemmon-ecommerce.appspot.com/o/Captura%20de%20tela%20de%202023-07-26%2020-17-08.png?alt=media&token=ceffc261-0efb-4ac1-bc7d-60ac7a66a244">
   <img 
