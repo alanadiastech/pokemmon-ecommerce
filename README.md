@@ -52,16 +52,16 @@ Site: [Pokkemon E-commerce](https://pokemmon-ecommerce.web.app/)
 
 
 
-    ## Clone do projeto
+  <h6>Clone do projeto</h6>
 
 ```jsx
 https://github.com/alanadiastech/pokemmon-ecommerce.git
 ```
 
-Após baixar basta:
+<h6>Após baixar basta:</h6>
 
 ```jsx
-#acessar pasta
+## acessar pasta
 cd imanager
 
 ## instalar dependências
@@ -69,15 +69,15 @@ yarn or npm install
 
 ## start projeto
 yarn dev ou npm run dev
+```
+## Social
 
-## :wave: Social
+Follow me @alanadiastech
 
-Follow me @alanadiastech :wink:
-<br />
 
 - [Instagram](https://www.instagram.com/alanadiastech/)
+
 - [LinkedIn](https://www.linkedin.com/in/alanadiastech/)
 
-<br />
 
----
+
