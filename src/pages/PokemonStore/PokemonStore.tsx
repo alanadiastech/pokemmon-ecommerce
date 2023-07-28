@@ -22,6 +22,7 @@ export const PokemonStore = () => {
         handleOpenDiv={container.handleOpenDiv}
         totalQuantity={container.totalQuantity}
         pokemonState={container.pokemonState}
+        messageSearch={container.messageSearch}
       />
       <div className="font-poppins">
       {container.loading && (
@@ -131,6 +132,12 @@ export const PokemonStore = () => {
           message={container.message}
           handleCloseAlert={container.handleCloseAlert} 
         />
+      )}
+      {container.messageSearch && (
+        <AlertMessage
+        message={container.messageSearch}
+        handleCloseAlert={container.handleCloseAlert} 
+      />
       )}
       {container.openDialog && (
         <PokemonDetail

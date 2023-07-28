@@ -44,6 +44,7 @@ export interface PokemonStoreContainerType {
   removeFromCart: (pokemon: PokemonDetail) => void;
   handleQuantityChange: (event: React.ChangeEvent<HTMLInputElement>, pokemon: PokemonDetail) => void;
   totalQuantity: number;
+  messageSearch: string;
 }
 
 export interface PokemonCartProps {

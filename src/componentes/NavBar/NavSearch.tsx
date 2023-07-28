@@ -56,10 +56,6 @@ export const NavSearch = (props: NavProps) => {
             )}
           </label>
         </form>
-        {/* <span className="text-white font-bold text-sm mt-2 text-center">
-          A pesquisa não retornou resultados
-          {props.messsage}
-        </span> */}
       </div>
     </>
   );

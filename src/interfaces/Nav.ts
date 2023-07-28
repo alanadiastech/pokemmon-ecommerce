@@ -7,4 +7,5 @@ export interface NavProps {
     handleOpenDiv: () => void;
     totalQuantity: number;
     pokemonState: PokemonDetail;
+    messageSearch: string;
   }

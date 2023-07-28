@@ -13,6 +13,7 @@ export const PokemonStoreContainer = (): PokemonStoreContainerType => {
   const [loading, setLoading] = useState(false);
   const [errorRequest, setErrorRequest] = useState(false);
   const [message, setMessage] = useState<string>('');
+  const [messageSearch, setMessageSearch] = useState<string>('');
   const indexOfLastPokemon = currentPage * pokemonsPerPage;
   const indexOfFirstPokemon = indexOfLastPokemon - pokemonsPerPage;
   const currentPokemons = pokemons.slice(indexOfFirstPokemon, indexOfLastPokemon);
@@ -21,7 +22,7 @@ export const PokemonStoreContainer = (): PokemonStoreContainerType => {
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [showDiv, setShowDiv] = useState(false);
   const [showDataById, setShowDataById] = useState<number>(0);
-  const [cartValues, setCartValues] = useState<Cart>({pokeValues: [], total: 0 }); // Estado para controlar os valores do carrinho
+  const [cartValues, setCartValues] = useState<Cart>({ pokeValues: [], total: 0 }); // Estado para controlar os valores do carrinho
   const [totalQuantity, setTotalQuantity] = useState(0);
   const navigate = useNavigate();
 
@@ -29,6 +30,7 @@ export const PokemonStoreContainer = (): PokemonStoreContainerType => {
     setShowAlert(false);
     setMessage('');
     navigate('/');
+    setMessageSearch('')
   };
 
   const paginate = (pageNumber: number) => {
@@ -55,14 +57,26 @@ export const PokemonStoreContainer = (): PokemonStoreContainerType => {
     }
   }, [search, currentPage, pokemons, pokemonsPerPage]);
 
+  useEffect(() => {
+    if (filteredPokemons.length === 0) {
+      setMessageSearch('Nenhum Pokémon encontrado. Pesquise outro nome!');
+      setErrorRequest(true);
+      setErrorRequest(false)
+    } else {
+      setMessageSearch('');
+      setErrorRequest(false);
+    }
+  }, [filteredPokemons]);
+
+
   const getPageNumbers = () => {
     const pageNumbers = [];
     const totalPages = Math.ceil(pokemons.length / pokemonsPerPage);
     const maxVisiblePages = 3;
-  
+
     let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
     let endPage = Math.min(startPage + maxVisiblePages - 1, totalPages);
-  
+
     if (totalPages <= maxVisiblePages) {
       startPage = 1;
       endPage = totalPages;
@@ -71,14 +85,14 @@ export const PokemonStoreContainer = (): PokemonStoreContainerType => {
     } else if (currentPage + Math.floor(maxVisiblePages / 2) >= totalPages) {
       startPage = totalPages - maxVisiblePages + 1;
     }
-  
+
     for (let i = startPage; i <= endPage; i++) {
       pageNumbers.push(i);
     }
-  
+
     return pageNumbers;
   };
-  
+
   const handlePreviousPage = () => {
     if (currentPage > 1) {
       paginate(currentPage - 1);
@@ -102,7 +116,7 @@ export const PokemonStoreContainer = (): PokemonStoreContainerType => {
           return {
             ...pokemon,
             imageUrl: pokemonData.data.sprites?.other['official-artwork']?.front_default || '',
-            id:pokemonData.data.id || '',
+            id: pokemonData.data.id || '',
             name: pokemonData.data.species?.name || '',
             height: pokemonData.data.height || '',
             types: pokemonData.data.types || '',
@@ -145,10 +159,10 @@ export const PokemonStoreContainer = (): PokemonStoreContainerType => {
     event.preventDefault();
     let pokeValues;
     let newItem = true;
-  
+
     if (!cartValues) pokeValues = [{ pokemon: pokemon, qtd: 0, total: 0 }];
     else pokeValues = cartValues.pokeValues;
-  
+
     pokeValues.forEach((pokevalue) => {
       if (pokevalue.pokemon.id === pokemon.id) {
         newItem = false;
@@ -156,23 +170,23 @@ export const PokemonStoreContainer = (): PokemonStoreContainerType => {
         pokevalue.total = ((pokevalue.pokemon.weight + 13.99) / 5) * pokevalue.qtd
       }
     });
-  
+
     if (newItem)
       pokeValues.push({
         pokemon,
         qtd: 1,
         total: (pokemon.weight + 13.99) / 5,
       });
-  
+
     const total: number = pokeValues.reduce((prev, cur) => {
       return prev + cur.total;
     }, 0);
-  
+
     setCartValues({ pokeValues, total });
     setTotalQuantity(calculateTotalQuantity(pokeValues));
     localStorage.setItem('cartValues', JSON.stringify({ pokeValues, total }));
   };
-  
+
   const removeFromCart = async (pokemon: PokemonDetail) => {
     if (cartValues) {
       let pokeValues = cartValues.pokeValues;
@@ -189,13 +203,13 @@ export const PokemonStoreContainer = (): PokemonStoreContainerType => {
 
       setCartValues({ pokeValues, total });
       setTotalQuantity(calculateTotalQuantity(pokeValues));
-  
+
       localStorage.setItem('cartValues', JSON.stringify({ pokeValues, total }));
     }
   };
-  
+
   const handleQuantityChange = (event: React.ChangeEvent<HTMLInputElement>, pokemon: PokemonDetail) => {
-    const newQuantity = parseInt(event.target.value, 10);  
+    const newQuantity = parseInt(event.target.value, 10);
     if (!isNaN(newQuantity) && newQuantity > 0) {
       const pokeValues = cartValues.pokeValues.map((pokevalue) => {
         if (pokevalue.pokemon.name === pokemon.name) {
@@ -204,11 +218,11 @@ export const PokemonStoreContainer = (): PokemonStoreContainerType => {
         }
         return pokevalue;
       });
-  
+
       const total: number = pokeValues.reduce((prev, cur) => {
         return prev + cur.total;
       }, 0);
-  
+
       setCartValues({ pokeValues, total });
       setTotalQuantity(calculateTotalQuantity(pokeValues));
       localStorage.setItem('cartValues', JSON.stringify({ pokeValues, total }));
@@ -217,15 +231,15 @@ export const PokemonStoreContainer = (): PokemonStoreContainerType => {
       removeFromCart(pokemon)
     };
   };
-  
-    const calculateTotalQuantity = (pokeValues: any[]) => {
+
+  const calculateTotalQuantity = (pokeValues: any[]) => {
     let totalQuantity = 0;
     pokeValues.forEach((pokevalue) => {
       totalQuantity += pokevalue.qtd;
     });
     return totalQuantity;
   };
-  
+
   useEffect(() => {
     const savedCartValues = localStorage.getItem('cartValues');
     if (savedCartValues) {
@@ -234,7 +248,7 @@ export const PokemonStoreContainer = (): PokemonStoreContainerType => {
       setTotalQuantity(calculateTotalQuantity(pokeValues));
     }
   }, []);
-  
+
   const container: PokemonStoreContainerType = {
     pokemons,
     getPageNumbers,
@@ -266,6 +280,7 @@ export const PokemonStoreContainer = (): PokemonStoreContainerType => {
     removeFromCart,
     handleQuantityChange,
     totalQuantity,
+    messageSearch
   };
 
   return container;
